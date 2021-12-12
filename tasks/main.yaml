@@ -1,0 +1,61 @@
+# ------------------------------------------------------------------------------
+
+
+- name: Install Gopass with asdf
+  import_role:
+    name: trallnag.asdf_plugin
+  vars:
+    asdf_plugin_name: gopass
+    asdf_plugin_git_url: https://github.com/trallnag/asdf-gopass.git
+    asdf_plugin_package_versions: ["1.13.0"]
+    asdf_plugin_package_version_global: "1.13.0"
+
+- name: Install OS dependencies
+  package:
+    name:
+      - rng-tools
+    state: present
+  become: true
+
+
+# ------------------------------------------------------------------------------
+# Bash
+
+
+- name: "bash : Add block"
+  blockinfile:
+    path: "{{ bash_bashrc_middle }}"
+    insertafter: EOF
+    state: present
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      source <(gopass completion bash)
+
+
+# ------------------------------------------------------------------------------
+# Zsh completion
+
+
+- name: "zsh : Generate completion script"
+  ansible.builtin.shell: |
+    source ~/.asdf/asdf.sh
+    sudo mkdir -p /usr/local/share/zsh/site-functions
+    gopass completion zsh | sudo tee /usr/local/share/zsh/site-functions/_gopass
+  args: {warn: false}
+  changed_when: false
+
+
+# ------------------------------------------------------------------------------
+
+
+- name: Clone gopass-root
+  ansible.builtin.shell: |
+    if [ ! -d ~/.local/share/gopass/stores/root ]; then
+      source ~/.asdf/asdf.sh
+      gopass clone git@github.com:trallnag/gopass-root.git
+    fi
+  args: {executable: /usr/bin/zsh, warn: false}
+  changed_when: false
+
+
+# ------------------------------------------------------------------------------
