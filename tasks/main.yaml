@@ -7,8 +7,8 @@
   vars:
     asdf_plugin_name: gopass
     asdf_plugin_git_url: https://github.com/trallnag/asdf-gopass.git
-    asdf_plugin_package_versions: ["1.13.0"]
-    asdf_plugin_package_version_global: "1.13.0"
+    asdf_plugin_package_versions: ["1.14.0"]
+    asdf_plugin_package_version_global: "1.14.0"
 
 - name: Install OS dependencies
   package:
@@ -39,9 +39,8 @@
 - name: "zsh : Generate completion script"
   ansible.builtin.shell: |
     source ~/.asdf/asdf.sh
-    sudo mkdir -p /usr/local/share/zsh/site-functions
     gopass completion zsh | sudo tee /usr/local/share/zsh/site-functions/_gopass
-  args: {warn: false}
+  args: { warn: false }
   changed_when: false
 
 
@@ -54,7 +53,7 @@
       source ~/.asdf/asdf.sh
       gopass clone git@github.com:trallnag/gopass-root.git
     fi
-  args: {executable: /usr/bin/zsh, warn: false}
+  args: { executable: /usr/bin/zsh, warn: false }
   changed_when: false
 
 
