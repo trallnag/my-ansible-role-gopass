@@ -10,5 +10,5 @@
 
 ## Bump version of Gopass?
 
-Go into [./tasks/main.yaml](./tasks/main.yaml) and bump the version in the
+Go into [`tasks/main.yaml`](tasks/main.yaml) and bump the version in the
 "Install Gopass with asdf" task.
